@@ -224,7 +224,7 @@ class StrTest extends TestCase
      */
     public function testAsRouteName(string $value, string $expectedRouteName)
     {
-        $this->assertSame($expectedRouteName, Str::asRouteName($value));
+        $this->assertSame($expectedRouteName, Str::asRouteName($value, 'app_'));
     }
 
     public function provideAsRouteName()

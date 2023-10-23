@@ -1,9 +1,9 @@
-<?= $helper->getHeadPrintCode('New '.$entity_class_name) ?>
+<?= $helper->getHeadPrintCode('New ' . $entity_class_name, 'admin/') ?>
 
 {% block body %}
-    <h1>Create new <?= $entity_class_name ?></h1>
+<h1>{% trans %}Créer nouveau <?= $entity_class_name ?>{% endtrans %}</h1>
 
-    {{ include('<?= $templates_path ?>/_form.html.twig') }}
+{{ include('<?= $templates_path ?>/_form.html.twig') }}
 
-    <a href="{{ path('<?= $route_name ?>_index') }}">back to list</a>
+<a href="{{ path('<?= $route_name ?>.index') }}" class="btn btn-back-to-list">{% trans %}Retour à la liste{% endtrans %}</a>
 {% endblock %}

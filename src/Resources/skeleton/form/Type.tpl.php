@@ -28,6 +28,9 @@ class <?= $class_name ?> extends AbstractType
         $resolver->setDefaults([
 <?php if ($bounded_class_name): ?>
             'data_class' => <?= $bounded_class_name ?>::class,
+            'empty_data' => function (FormInterface $form) {
+                return new <?= $bounded_class_name ?>();
+            }
 <?php else: ?>
             // Configure your form options here
 <?php endif ?>

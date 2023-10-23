@@ -35,6 +35,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -153,7 +154,7 @@ final class MakeCrud extends AbstractMaker
         $entityTwigVarPlural = Str::asTwigVariable($entityVarPlural);
         $entityTwigVarSingular = Str::asTwigVariable($entityVarSingular);
 
-        $routeName = Str::asRouteName($controllerClassDetails->getRelativeNameWithoutSuffix());
+        $routeName = Str::asRouteName($controllerClassDetails->getRelativeNameWithoutSuffix(), 'admin.');
         $templatesPath = Str::asFilePath($controllerClassDetails->getRelativeNameWithoutSuffix());
 
         $useStatements = new UseStatementGenerator([
@@ -193,7 +194,11 @@ final class MakeCrud extends AbstractMaker
         $this->formTypeRenderer->render(
             $formClassDetails,
             $entityDoctrineDetails->getFormFields(),
-            $entityClassDetails
+            $entityClassDetails,
+            [],
+            [
+                FormInterface::class,
+            ]
         );
 
         $templates = [

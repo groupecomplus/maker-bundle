@@ -91,7 +91,7 @@ final class MakeController extends AbstractMaker
             [
                 'use_statements' => $useStatements,
                 'route_path' => Str::asRoutePath($controllerClassNameDetails->getRelativeNameWithoutSuffix()),
-                'route_name' => Str::asRouteName($controllerClassNameDetails->getRelativeNameWithoutSuffix()),
+                'route_name' => Str::asRouteName($controllerClassNameDetails->getRelativeNameWithoutSuffix(), 'app_'),
                 'method_name' => $isInvokable ? '__invoke' : 'index',
                 'with_template' => $withTemplate,
                 'template_name' => $templateName,

@@ -4,10 +4,10 @@ namespace <?= $namespace ?>;
 
 <?= $use_statements; ?>
 
-#[Route('<?= $route_path ?>')]
+#[Route('<?= $route_path ?>', name: '<?= $route_name ?>.')]
 class <?= $class_name ?> extends AbstractController
 {
-<?= $generator->generateRouteForControllerMethod('/', sprintf('%s_index', $route_name), ['GET']) ?>
+<?= $generator->generateRouteForControllerMethod('/', 'index', ['GET']) ?>
 <?php if (isset($repository_full_class_name)): ?>
     public function index(<?= $repository_class_name ?> $<?= $repository_var ?>): Response
     {
@@ -28,18 +28,19 @@ class <?= $class_name ?> extends AbstractController
     }
 <?php endif ?>
 
-<?= $generator->generateRouteForControllerMethod('/new', sprintf('%s_new', $route_name), ['GET', 'POST']) ?>
+<?= $generator->generateRouteForControllerMethod('/new', 'new', ['GET', 'POST']) ?>
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $<?= $entity_var_singular ?> = new <?= $entity_class_name ?>();
+        $<?= $entity_var_singular ?> = null;
         $form = $this->createForm(<?= $form_class_name ?>::class, $<?= $entity_var_singular ?>);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $<?= $entity_var_singular ?> = $form->getData();
             $entityManager->persist($<?= $entity_var_singular ?>);
             $entityManager->flush();
 
-            return $this->redirectToRoute('<?= $route_name ?>_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('<?= $route_name ?>.index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('<?= $templates_path ?>/new.html.twig', [
@@ -48,7 +49,7 @@ class <?= $class_name ?> extends AbstractController
         ]);
     }
 
-<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}', $entity_identifier), sprintf('%s_show', $route_name), ['GET']) ?>
+<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}', $entity_identifier), 'show', ['GET']) ?>
     public function show(<?= $entity_class_name ?> $<?= $entity_var_singular ?>): Response
     {
         return $this->render('<?= $templates_path ?>/show.html.twig', [
@@ -56,7 +57,7 @@ class <?= $class_name ?> extends AbstractController
         ]);
     }
 
-<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}/edit', $entity_identifier), sprintf('%s_edit', $route_name), ['GET', 'POST']) ?>
+<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}/edit', $entity_identifier), 'edit', ['GET', 'POST']) ?>
     public function edit(Request $request, <?= $entity_class_name ?> $<?= $entity_var_singular ?>, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(<?= $form_class_name ?>::class, $<?= $entity_var_singular ?>);
@@ -65,7 +66,7 @@ class <?= $class_name ?> extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('<?= $route_name ?>_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('<?= $route_name ?>.index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('<?= $templates_path ?>/edit.html.twig', [
@@ -74,7 +75,7 @@ class <?= $class_name ?> extends AbstractController
         ]);
     }
 
-<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}', $entity_identifier), sprintf('%s_delete', $route_name), ['POST']) ?>
+<?= $generator->generateRouteForControllerMethod(sprintf('/{%s}', $entity_identifier), 'delete', ['POST']) ?>
     public function delete(Request $request, <?= $entity_class_name ?> $<?= $entity_var_singular ?>, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$<?= $entity_var_singular ?>->get<?= ucfirst($entity_identifier) ?>(), $request->getPayload()->getString('_token'))) {
@@ -82,6 +83,6 @@ class <?= $class_name ?> extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('<?= $route_name ?>_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('<?= $route_name ?>.index', [], Response::HTTP_SEE_OTHER);
     }
 }

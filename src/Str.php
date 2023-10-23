@@ -98,11 +98,11 @@ final class Str
         return '/'.str_replace('_', '/', self::asTwigVariable($value));
     }
 
-    public static function asRouteName(string $value): string
+    public static function asRouteName(string $value, string $needle = 'app_'): string
     {
-        $routeName = self::asTwigVariable($value);
+        $routeName = preg_replace('/_/', '.', self::asTwigVariable($value));
 
-        return str_starts_with($routeName, 'app_') ? $routeName : 'app_'.$routeName;
+        return str_starts_with($routeName, $needle) ? $routeName : $needle . $routeName;
     }
 
     public static function asSnakeCase(string $value): string
